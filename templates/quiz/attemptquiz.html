@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .add-button {
+            background-color: #f0f0f0;
+            border: none;
+            color: #333;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .remove-button {
+            background-color: #eee;
+            border: none;
+            color: #666;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 8px;
+            border-radius: 3px;
+        }
+        .question {
+            margin-bottom: 10px;
+        }
+        .options {
+            margin-top: 5px;
+        }
+        .option {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>{{ quiz.title }}</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            {% for q in text %}
+            <div class="section">
+                <label for="text_{{ q.id }}">{{ q.question }}</label>
+                <input type="text" id="text_{{ q.id }}" name="text_{{ q.id }}" required>
+            </div>
+            {% endfor %}
+
+            {% for q in mcqs %}
+            <div class="section">
+                <label for="mcq_{{ q.question.id }}">{{ q.question.question }}</label>
+                
+                {% for option in q.options %}
+                <input type="radio" name="mcq_{{ q.question.id }}" id="option_{{ q.question.id }}_{{ option.id }}" value="{{ option.id}}">
+                <label for="option_{{ q.question.id }}_{{ option.id }}">{{ option.text }}</label>
+                
+                {% endfor %}
+            {% endfor %}
+
+            <div class="section">
+                <input type="submit" value="Submit" class="add-button">
+            </div>
+        
+
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .add-button {
+            background-color: #f0f0f0;
+            border: none;
+            color: #333;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .remove-button {
+            background-color: #eee;
+            border: none;
+            color: #666;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 8px;
+            border-radius: 3px;
+        }
+        .question {
+            margin-bottom: 10px;
+        }
+        .options {
+            margin-top: 5px;
+        }
+        .option {
+            margin-bottom: 5px;
+        }
+    </style>
+    <script>
+        let textQuestionCount = 0;
+        let mcqQuestionCount = 0;
+
+        function addTextQuestion() {
+            textQuestionCount++;
+            const textQuestionsDiv = document.getElementById('text_questions');
+            const textQuestionDiv = document.createElement('div');
+            textQuestionDiv.classList.add('question');
+            textQuestionDiv.innerHTML = `
+                <h3>Text Question ${textQuestionCount}</h3>
+                <label for="textquestion_${textQuestionCount}">Question:</label>
+                <input type="text" id="textquestion_${textQuestionCount}" name="textquestion_${textQuestionCount}">
+                <button type="button" class="remove-button" onclick="removeTextQuestion(${textQuestionCount})">Remove</button>
+            `;
+            textQuestionsDiv.appendChild(textQuestionDiv);
+        }
+
+        function removeTextQuestion(count) {
+            const textQuestionDiv = document.getElementById(`textquestion_${count}`).closest('.question');
+            textQuestionDiv.remove();
+        }
+
+        function addMcqQuestion() {
+            mcqQuestionCount++;
+            const mcqQuestionsDiv = document.getElementById('mcq_questions');
+            const mcqQuestionDiv = document.createElement('div');
+            mcqQuestionDiv.classList.add('question');
+            mcqQuestionDiv.innerHTML = `
+                <h3>MCQ Question ${mcqQuestionCount}</h3>
+                <label for="mcq_${mcqQuestionCount}">Question:</label>
+                <input type="text" id="mcq_${mcqQuestionCount}" name="mcq_${mcqQuestionCount}">
+                <label for="points_${mcqQuestionCount}">Points:</label>
+                <input type="number" id="points_${mcqQuestionCount}" name="points_${mcqQuestionCount}" value="1">
+                <div id="options_${mcqQuestionCount}" class="options">
+                    <div class="option">
+                        <label for="option_${mcqQuestionCount}_1">Option 1:</label>
+                        <input type="text" id="option_${mcqQuestionCount}_1" name="option_${mcqQuestionCount}_1">
+                        <input type="checkbox" name="correct_${mcqQuestionCount}_1">
+                    </div>
+                </div>
+                <button type="button" class="add-button" onclick="addOption(${mcqQuestionCount})">Add Option</button>
+                <button type="button" class="remove-button" onclick="removeMcqQuestion(${mcqQuestionCount})">Remove</button>
+            `;
+            mcqQuestionsDiv.appendChild(mcqQuestionDiv);
+        }
+
+        function removeMcqQuestion(count) {
+            const mcqQuestionDiv = document.getElementById(`mcq_${count}`).closest('.question');
+            mcqQuestionDiv.remove();
+        }
+
+        function addOption(mcqCount) {
+            const optionsDiv = document.getElementById(`options_${mcqCount}`);
+            const optionCount = optionsDiv.querySelectorAll('.option').length + 1;
+            const optionDiv = document.createElement('div');
+            optionDiv.classList.add('option');
+            optionDiv.innerHTML = `
+                <label for="option_${mcqCount}_${optionCount}">Option ${optionCount}:</label>
+                <input type="text" id="option_${mcqCount}_${optionCount}" name="option_${mcqCount}_${optionCount}">
+                <input type="checkbox" name="correct_${mcqCount}_${optionCount}">
+                <button type="button" class="remove-button" onclick="removeOption(${mcqCount}, ${optionCount})">Remove</button>
+            `;
+            optionsDiv.appendChild(optionDiv);
+        }
+
+        function removeOption(mcqCount, optionCount) {
+            const optionDiv = document.getElementById(`option_${mcqCount}_${optionCount}`).closest('.option');
+            optionDiv.remove();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Create Quiz</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="section">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+
+            <div class="section">
+                <label><input type="checkbox" id="viewans" name="viewans"> View correct Answers</label><br>
+                <label><input type="checkbox" id="showscore" name="showscore"> Show Score</label>
+            </div>
+
+            <div class="section">
+                <div id="text_questions">
+                    <h3>Text Questions</h3>
+                    <button type="button" class="add-button" onclick="addTextQuestion()">Add Text Question</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div id="mcq_questions">
+                    <h3>MCQ Questions</h3>
+                    <button type="button" class="add-button" onclick="addMcqQuestion()">Add MCQ Question</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <input type="submit" value="Create Quiz" class="add-button">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
