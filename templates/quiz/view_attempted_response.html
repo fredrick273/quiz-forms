@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Attempted Response</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .correct-answer {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect-answer {
+            color: red;
+            font-weight: bold;
+        }
+        .options {
+            margin-top: 5px;
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+        }
+        .option {
+            margin-bottom: 5px;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Response for Quiz: {{ quiz.title }}</h2>
+        <div class="section">
+            <h3>Response ID: {{ attempted_response.response_id }} ({{ attempted_response.time }})</h3>
+            {% if viewanswer %} <h4>Points: {{ points }} / {{ max_points }}</h4> {% endif %}
+            <h4>Text Questions:</h4>
+            <ul>
+                {% for text_answer in attempted_response.text_answers %}
+                    <li>
+                        <strong>Question:</strong> {{ text_answer.question }}<br>
+                        <strong>Your Answer:</strong> {{ text_answer.answer }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="section">
+            <h4>MCQ Questions:</h4>
+            <ul>
+                {% for mcq_answer in attempted_response.mcq_answers %}
+                    <li>
+                        <strong>Question:</strong> {{ mcq_answer.question }}<br>
+                        <div class="options">
+                        {% for option in mcq_answer.options %}
+                            <div class="option">
+                            <input type="radio" name="" id="" disabled  {% if mcq_answer.answer == option.text %} checked {% endif %}>
+                            <label for="">{{ option.text }}</label>
+                            {% if viewanswer %}
+                            {% if mcq_answer.answer == option.text %}
+                                {% if option.is_correct %}
+                                <span class="correct-answer">
+                                    ✓
+                                </span>
+
+                                {% else %}
+                                <span class="incorrect-answer">
+                                    ✕
+                                </span>
+
+                                {% endif %}
+                            {% endif %}
+                            {% endif %}
+                            </div>
+                        {% endfor %}
+                        </div>
+                        {% if viewanswer %}
+                            <br><p>Correct Option: {{ mcq_answer.correct_ans }}</p>
+                        {% endif %}
+                        
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

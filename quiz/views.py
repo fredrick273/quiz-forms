@@ -87,7 +87,7 @@ def attemptquiz(request,id):
                 mcqans.save()
                 print()
             print(key)
-        return redirect('quiz_list')
+        return redirect('view_attempted_response', res.id)
     
     quiz = get_object_or_404(Quiz,id = id)
     textquestions = TextQuestion.objects.filter(quiz= quiz)
@@ -102,3 +102,99 @@ def attemptquiz(request,id):
     print(mcqqustions)
 
     return render(request,'quiz/attemptquiz.html', {'quiz':quiz,'text':textquestions,'mcqs':mcqqustions})
+
+
+
+def view_attempted_response(request, response_id):
+    response = get_object_or_404(Response, id=response_id)
+    quiz = response.quiz
+    points = 0
+    max_points = 0
+
+    text_answers = TextAnswer.objects.filter(response=response)
+    mcq_answers = McqAnswer.objects.filter(response=response)
+
+    for i in mcq_answers:
+        max_points += i.answer.mcq.points
+        if i.answer.is_correct:
+            points += i.answer.mcq.points
+
+    text_answers_list = [{'question': answer.question.question, 'answer': answer.answer} for answer in text_answers]
+    mcq_answers_list = [
+        {
+            'question': answer.question.question,
+            'answer': answer.answer.text,
+            'options': McqOption.objects.filter(mcq = answer.question),
+            'is_correct': answer.answer.is_correct if quiz.viewanswer else None,
+            'points': answer.question.points if quiz.showscore else None,
+            'correct_ans': McqOption.objects.get(mcq = answer.question, is_correct = True).text
+        }
+        for answer in mcq_answers
+    ]
+
+    attempted_response = {
+        'response_id': response.id,
+        'time': response.time,
+        'text_answers': text_answers_list,
+        'mcq_answers': mcq_answers_list,
+        
+    }
+
+    context = {
+        'quiz': quiz,
+        'attempted_response': attempted_response,
+        'viewanswer': quiz.viewanswer,
+        'showscore': quiz.showscore,
+        'points': points,
+        'max_points':max_points
+    }
+
+    return render(request, 'quiz/view_attempted_response.html', context)
+
+
+
+def admin_viewresponse(request, response_id):
+    response = get_object_or_404(Response, id=response_id)
+    quiz = response.quiz
+    points = 0
+    max_points = 0
+
+    text_answers = TextAnswer.objects.filter(response=response)
+    mcq_answers = McqAnswer.objects.filter(response=response)
+
+    for i in mcq_answers:
+        max_points += i.answer.mcq.points
+        if i.answer.is_correct:
+            points += i.answer.mcq.points
+
+    text_answers_list = [{'question': answer.question.question, 'answer': answer.answer} for answer in text_answers]
+    mcq_answers_list = [
+        {
+            'question': answer.question.question,
+            'answer': answer.answer.text,
+            'options': McqOption.objects.filter(mcq = answer.question),
+            'is_correct': answer.answer.is_correct if quiz.viewanswer else None,
+            'points': answer.question.points if quiz.showscore else None,
+            'correct_ans': McqOption.objects.get(mcq = answer.question, is_correct = True).text
+        }
+        for answer in mcq_answers
+    ]
+
+    attempted_response = {
+        'response_id': response.id,
+        'time': response.time,
+        'text_answers': text_answers_list,
+        'mcq_answers': mcq_answers_list,
+        
+    }
+
+    context = {
+        'quiz': quiz,
+        'attempted_response': attempted_response,
+        'viewanswer': quiz.viewanswer,
+        'showscore': quiz.showscore,
+        'points': points,
+        'max_points':max_points
+    }
+
+    return render(request, 'quiz/admin_viewresponse.html', context)
