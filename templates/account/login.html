@@ -1,36 +1,131 @@
 {% extends 'account/base.html' %}
 {% load static %}
 
+{% block extra_head %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 20px;
+    }
+    .center {
+        max-width: 400px;
+        margin: 50px auto;
+        background-color: #fff;
+        padding: 40px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        border-radius: 5px;
+    }
+    .center h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .text-area {
+        position: relative;
+        margin-bottom: 30px;
+    }
+    .text-area input {
+        width: 100%;
+        padding: 10px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+    }
+    .text-area span {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        transition: 0.2s;
+    }
+    .text-area input:focus + span,
+    .text-area input:not(:placeholder-shown) + span {
+        top: 0;
+        left: 10px;
+        font-size: 0.8em;
+        color: #333;
+    }
+    .text-area label {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 0.8em;
+        color: #999;
+        pointer-events: none;
+        transition: 0.2s;
+    }
+    .text-area input:focus + label,
+    .text-area input:not(:placeholder-shown) + label {
+        top: -20px;
+        left: 10px;
+        color: #333;
+    }
+    .pass {
+        text-align: right;
+        margin-bottom: 20px;
+    }
+    .pass a {
+        color: #333;
+        text-decoration: none;
+    }
+    .pass a:hover {
+        text-decoration: underline;
+    }
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background-color: #333;
+        color: #fff;
+        font-size: 1em;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    input[type="submit"]:hover {
+        background-color: #555;
+    }
+    .signup-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .signup-link a {
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .signup-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
 
-    {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'css/login-styles.css' %}">
-    {% endblock %}
-
-    {% block body %}
-    <div class="center">
-        <h1>Login</h1>
-        <form method="post">
-            {% csrf_token %}
-            <div class="text-area">
-                <input type="email" name="login" id="id_login" required>
-                <span></span>
-                <label>Email</label>
-            </div>
-            <div class="text-area">
-                <input type="password" name="password" id="id_password" required>
-                <span></span>
-                <label>Password</label>
-            </div>
-            <div class="pass">
-                <a href="#">Forgot Password?</a>
-            </div>
-            <input type="submit" value="Login">
-            <div class="signup-link">
-                Not a member? <a href="{% url 'account_signup' %}">Sign Up</a>
-            </div>
-        </form>
-    </div>
-
-    <!-- Include your static JavaScript file here -->
-    <script src="{% static '/js/scripts.js' %}"></script>
-    {% endblock %}
+{% block body %}
+<div class="center">
+    <h1>Login</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="text-area">
+            <input type="email" name="login" id="id_login" required>
+            <span></span>
+            <label>Email</label>
+        </div>
+        <div class="text-area">
+            <input type="password" name="password" id="id_password" required>
+            <span></span>
+            <label>Password</label>
+        </div>
+        <div class="pass">
+            <a href="#">Forgot Password?</a>
+        </div>
+        <input type="submit" value="Login">
+        <div class="signup-link">
+            Not a member? <a href="{% url 'account_signup' %}">Sign Up</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

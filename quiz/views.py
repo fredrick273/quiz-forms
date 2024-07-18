@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Quiz, TextQuestion,McqOption,MCQ,Response,TextAnswer,McqAnswer
 
+def index(request):
+    return render(request, 'quiz/index.html')
+
 # Create your views here.
 @login_required
 def createquiz(request):
@@ -198,3 +201,10 @@ def admin_viewresponse(request, response_id):
     }
 
     return render(request, 'quiz/admin_viewresponse.html', context)
+
+
+@login_required
+def view_quiz_reponses(request, id):
+    quiz = get_object_or_404(Quiz,id = id)
+    responses = Response.objects.filter(quiz = quiz)
+    return render(request,'quiz/view_quiz_response.html', {'responses': responses})

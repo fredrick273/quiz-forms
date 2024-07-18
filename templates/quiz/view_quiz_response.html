@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Attempted Response</title>
+    <title>View Quiz Response</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,19 +47,19 @@
 </head>
 <body>
     <div class="container">
-        <h2>Quizzes</h2>
+        <h2>Responses</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Title</th>
+                    <th>Response id</th>
                     <th>Link</th>
                 </tr>
             </thead>
             <tbody>
-                {% for quiz in quizes %}
+                {% for response in responses %}
                 <tr>
-                    <td>{{ quiz.title }}</td>
-                    <td><a href="{% url 'adminquizresponse' quiz.id %}">View Responses</a></td>
+                    <td>{{ response.id }}</td>
+                    <td><a href="{% url 'admin_view_response' response.id %}">View Attempted Response</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
