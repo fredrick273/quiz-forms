@@ -53,12 +53,14 @@
                 <tr>
                     <th>Title</th>
                     <th>Link</th>
+                    <th>Responses</th>
                 </tr>
             </thead>
             <tbody>
                 {% for quiz in quizes %}
                 <tr>
                     <td>{{ quiz.title }}</td>
+                    <td><a href="{% url 'attempt_quiz' quiz.id %}">Quiz link</a></td>
                     <td><a href="{% url 'adminquizresponse' quiz.id %}">View Responses</a></td>
                 </tr>
                 {% endfor %}
